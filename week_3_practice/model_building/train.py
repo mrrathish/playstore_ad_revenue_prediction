@@ -6,7 +6,7 @@ from sklearn.pipeline import make_pipeline
 # for model training, tuning, and evaluation
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 # for model serialization
 import joblib
 # for creating a folder
@@ -31,6 +31,11 @@ Xtrain = pd.read_csv(Xtrain_path)
 Xtest = pd.read_csv(Xtest_path)
 ytrain = pd.read_csv(ytrain_path)
 ytest = pd.read_csv(ytest_path)
+
+Xtrain = pd.read_csv(Xtrain_path, nrows=500)
+Xtest = pd.read_csv(Xtest_path, nrows=50)
+ytrain = pd.read_csv(ytrain_path, nrows=500)
+ytest = pd.read_csv(ytest_path, nrows=50)
 
 
 # Define numeric and categorical features
@@ -90,8 +95,8 @@ with mlflow.start_run():
     y_pred_test = best_model.predict(Xtest)
 
     # Metrics
-    train_rmse = mean_squared_error(ytrain, y_pred_train, squared=False)
-    test_rmse = mean_squared_error(ytest, y_pred_test, squared=False)
+    train_rmse = root_mean_squared_error(ytrain, y_pred_train)
+    test_rmse = root_mean_squared_error(ytest, y_pred_test)
 
     train_mae = mean_absolute_error(ytrain, y_pred_train)
     test_mae = mean_absolute_error(ytest, y_pred_test)
